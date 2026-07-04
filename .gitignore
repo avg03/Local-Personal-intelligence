@@ -1,0 +1,4 @@
+venv
+student_memory.db
+chroma.sqlite3
+__pycache__/
