@@ -5,7 +5,8 @@ client = chromadb.PersistentClient(
 )
 
 collection = client.get_or_create_collection(
-    name="student_memory"
+    name="student_memory",
+    metadata={"hnsw:space": "cosine"},
 )
 
 summary_collection = client.get_or_create_collection(
