@@ -69,4 +69,46 @@ def embed_and_store_chunks(
     )
  
     return len(chunks)
- 
+
+#will store summary embedddings in chormaDB also .
+def embed_summary(summary_text: str, encoder: Optional[SentenceTransformer] = None, embedding_model: str = "all-MiniLM-L6-v2") -> List[float]:
+    """
+    Embed a summary text using the provided encoder or a new SentenceTransformer instance.
+
+    Args:
+        summary_text: The summary text to embed.
+        encoder: A pre-loaded SentenceTransformer instance. Reuse the same
+                 instance across calls where possible.
+        embedding_model: Used only if encoder is None."""
+
+    if encoder is None:
+        encoder = SentenceTransformer(embedding_model)
+
+    embedding = encoder.encode(summary_text, convert_to_numpy=True).tolist()
+    return embedding 
+
+#save the summary embeddings in the summary_embeddings collection in ChromaDB
+def store_summary_embedding(summary_text: str, resource_id: str, collection, encoder: Optional[SentenceTransformer] = None, embedding_model: str = "all-MiniLM-L6-v2") -> None:
+    """
+    Embed a summary text and store it in the provided ChromaDB collection.
+
+    Args:
+        summary_text: The summary text to embed and store.
+        resource_id: ID of the parent resource this summary belongs to.
+        collection: Your existing ChromaDB collection object for storing summary embeddings.
+        encoder: A pre-loaded SentenceTransformer instance. Reuse the same
+                 instance across calls where possible.
+        embedding_model: Used only if encoder is None.
+    """
+    embedding = embed_summary(summary_text, encoder=encoder, embedding_model=embedding_model)
+
+    # Create a unique ID for the summary embedding based on the resource_id
+    summary_id = f"summary_{resource_id}"
+
+    # Upsert the summary embedding into the collection
+    collection.upsert(
+        ids=[summary_id],
+        embeddings=[embedding],
+        documents=[summary_text],
+        metadatas=[{"resource_id": resource_id}],
+    )
