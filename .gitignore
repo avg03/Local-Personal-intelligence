@@ -1,4 +1,6 @@
 venv
+nvenv
 student_memory.db
 chroma.sqlite3
 __pycache__/
+.env
