@@ -123,6 +123,10 @@ The system follows a modular multi-agent architecture.
                     Final Response
 ```
 
+<img width="574" height="853" alt="final_graph" src="https://github.com/user-attachments/assets/0de7cf88-de2a-444f-83c1-e7694aa43de5" />
+
+
+
 ---
 
 # 📥 Ingestion Workflow
@@ -402,6 +406,7 @@ This minimizes hallucinations by ensuring the model reasons over structured evid
 * Conversation memory
 * Personal study analytics
 * voice support and multilanguage support
+* remove the hugging face api interaction use internet rather download them
 
 ---
 
@@ -415,6 +420,151 @@ Privacy is a primary objective of this project.
 * Personal study material is never used for model training.
 
 ---
+# 🚀 Setup Guide
+
+## 1. Clone the Repository
+
+```bash
+git clone <repository-url>
+cd Local-Personal-Intelligence
+```
+
+---
+
+## 2. Create a Virtual Environment
+
+### Windows
+
+```bash
+python -m venv nvenv
+nvenv\Scripts\activate
+```
+
+### Linux / macOS
+
+```bash
+python3 -m venv nvenv
+source nvenv/bin/activate
+```
+
+---
+
+## 3. Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+## 4. Install Ollama
+
+Download and install Ollama from:
+
+https://ollama.com/
+
+Pull the required model:
+
+```bash
+ollama pull qwen3:4b
+```
+
+> Replace the model name if your project is configured to use a different local model.
+
+---
+
+## 5. Install Tesseract OCR
+
+Required only for OCR fallback during PDF ingestion.
+
+Download and install Tesseract OCR:
+
+https://github.com/tesseract-ocr/tesseract
+
+After installation, update the Tesseract executable path in the project if required.
+
+---
+
+## 6. Initialize the Database
+
+Run the database initialization script:
+
+```bash
+python -m database.schema
+```
+
+This creates the required SQLite tables.
+
+---
+
+## 7. Run the Application
+
+```bash
+python input_output.py
+```
+
+---
+
+# 🧪 Testing the Project
+
+### Ingest a PDF
+
+Select:
+
+```
+1. Ingest PDF
+```
+
+Then provide the absolute path to a PDF:
+
+```
+C:\Users\YourName\Documents\Notes.pdf
+```
+
+The system will:
+
+* Extract text
+* Build semantic chunks
+* Generate embeddings
+* Store metadata
+* Create document summaries
+
+---
+
+### Ask Questions
+
+Select:
+
+```
+2. Ask Question
+```
+
+Example queries:
+
+* What is deadlock?
+* Explain Banker's Algorithm.
+* What are the deliverables of the hackathon?
+* How does row rank relate to pivots?
+
+The system returns:
+
+* Evidence-grounded answer
+* Source document names
+* Source file paths
+
+---
+
+## Project Requirements
+
+* Python 3.10 or newer
+* Ollama installed and running
+* Qwen model downloaded
+* Tesseract OCR installed (for OCR fallback)
+* Internet connection required only for downloading models during the initial setup and hugging face api interaction with transformers
+
+Once configured, the project runs entirely offline using local models.
+
+
 
 # 👨‍💻 Author
 
