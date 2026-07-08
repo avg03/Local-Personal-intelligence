@@ -123,6 +123,10 @@ The system follows a modular multi-agent architecture.
                     Final Response
 ```
 
+<img width="574" height="853" alt="final_graph" src="https://github.com/user-attachments/assets/0de7cf88-de2a-444f-83c1-e7694aa43de5" />
+
+
+
 ---
 
 # 📥 Ingestion Workflow
