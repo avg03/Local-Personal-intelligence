@@ -32,15 +32,26 @@ Pick ONE, comment out the other.
 # OPTION B — hosted Inference API (no local download, needs a free
 # HF token from huggingface.co/settings/tokens + internet access)
 # ---------------------------------------------------------------
+import os
+
 from langchain_huggingface import ChatHuggingFace, HuggingFaceEndpoint
 from dotenv import load_dotenv
 
 load_dotenv()  # Load environment variables from .env file
 
-endpoint_llm = HuggingFaceEndpoint(
-    repo_id="Qwen/Qwen2.5-0.5B-Instruct",
-    huggingfacehub_api_token=load_dotenv().get("HUGGING_FACE_TOKEN"),
-    max_new_tokens=300,
-    temperature=0.3,
+# endpoint_llm = HuggingFaceEndpoint(
+#     repo_id="Qwen/Qwen2.5-0.5B-Instruct",
+#     huggingfacehub_api_token=os.getenv("HUGGING_FACE_TOKEN"),
+#     max_new_tokens=300,
+#     temperature=0.3,
+# )
+# llm = ChatHuggingFace(llm=endpoint_llm)
+
+#ollama
+from langchain_ollama import ChatOllama
+
+llm = ChatOllama(
+    model="qwen3.5:2b",
+    temperature=0.2,
+    num_ctx=8192,
 )
-llm = ChatHuggingFace(llm=endpoint_llm)
