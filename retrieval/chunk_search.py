@@ -6,7 +6,7 @@ Much cheaper than searching every chunk in the whole library.
 """
 
 from typing import List, Dict
-from resource_search import _check_cosine_metric  # same metric check, don't duplicate it
+from .resource_search import _check_cosine_metric  # same metric check, don't duplicate it
 
 
 def search_chunks_by_resource_ids(
@@ -65,8 +65,8 @@ def search_chunks_by_resource_ids(
 if __name__ == "__main__":
     import chromadb
     from ingestion.encoder_config import encoder
-    from query_processing import process_query
-    from resource_search import search_resources_by_summary
+    from .query_processing import process_query
+    from .resource_search import search_resources_by_summary
 
     client = chromadb.PersistentClient(path="./chroma")
     chunk_collection = client.get_or_create_collection(name="student_memory")
