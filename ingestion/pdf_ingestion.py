@@ -132,48 +132,87 @@ def clean_resume_text(text: str) -> str:
 
 def extract_text_with_page_map(pdf_path: str, ocr_dpi: int = 300):
     """
-    Like extract_text_from_pdf, but cleans each page individually and
-    tracks where each page's text lands in the final concatenated string.
-    Use this version when you need page_number for the SQLite `chunks`
-    table — offsets computed on raw (uncleaned) text would drift once
-    clean_resume_text() collapses whitespace/removes lines.
+    Extract text page-by-page while tracking page boundaries and pages
+    that could not be reliably extracted.
 
     Returns:
-        (full_text, page_boundaries) where full_text is the cleaned,
-        concatenated text and page_boundaries is a list of dicts:
-        {"page_number": int, "start_index": int, "end_index": int}
-        (page_number is 1-indexed, offsets are into full_text)
+        (
+            full_text,
+            page_boundaries,
+            failed_pages
+        )
+
+    page_boundaries:
+        [
+            {
+                "page_number": int,
+                "start_index": int,
+                "end_index": int
+            }
+        ]
+
+    failed_pages:
+        List[int] (1-indexed page numbers)
     """
+
     if not os.path.exists(pdf_path):
         raise FileNotFoundError(f"PDF not found: {pdf_path}")
 
     try:
         doc = fitz.open(pdf_path)
     except Exception as e:
-        raise RuntimeError(f"Failed to open PDF with PyMuPDF: {pdf_path} — {e}")
+        raise RuntimeError(
+            f"Failed to open PDF with PyMuPDF: {pdf_path} — {e}"
+        )
 
     full_text = ""
     page_boundaries = []
+    failed_pages = []
+
+    MIN_PAGE_TEXT_LENGTH = 20
 
     for page_num in range(len(doc)):
-        raw_page_text = _extract_single_page_text(doc[page_num], page_num, ocr_dpi)
-        cleaned_page_text = clean_resume_text(raw_page_text)
 
-        if not cleaned_page_text:
-            continue  # skip empty pages, don't create a zero-width boundary
+        try:
+            raw_page_text = _extract_single_page_text(
+                doc[page_num],
+                page_num,
+                ocr_dpi,
+            )
 
-        start = len(full_text)
-        full_text += cleaned_page_text + "\n\n"
-        end = len(full_text.rstrip())
+            cleaned_page_text = clean_resume_text(raw_page_text)
 
-        page_boundaries.append({
-            "page_number": page_num + 1,
-            "start_index": start,
-            "end_index": end,
-        })
+            # Mark page for Vision recovery
+            if len(cleaned_page_text.strip()) < MIN_PAGE_TEXT_LENGTH:
+                failed_pages.append(page_num + 1)
+                continue
+
+            start = len(full_text)
+
+            full_text += cleaned_page_text + "\n\n"
+
+            end = len(full_text.rstrip())
+
+            page_boundaries.append(
+                {
+                    "page_number": page_num + 1,
+                    "start_index": start,
+                    "end_index": end,
+                }
+            )
+
+        except Exception:
+            # Any page-level failure is recoverable later
+            failed_pages.append(page_num + 1)
+            continue
 
     doc.close()
-    return full_text.strip(), page_boundaries
+
+    return (
+        full_text.strip(),
+        page_boundaries,
+        failed_pages,
+    )
 
 
 def find_page_for_chunk(chunk_start_index: int, page_boundaries) -> Optional[int]:
