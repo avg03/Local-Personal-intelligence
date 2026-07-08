@@ -406,7 +406,7 @@ This minimizes hallucinations by ensuring the model reasons over structured evid
 * Conversation memory
 * Personal study analytics
 * voice support and multilanguage support
-* remove the hugging face api interaction use internet rather download them
+* remove the hugging face api interaction use internet rather download them.
 
 ---
 
