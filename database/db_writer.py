@@ -11,10 +11,26 @@ below on purpose, to avoid writing fabricated placeholder data.
 
 from typing import List, Dict, Optional
 from datetime import datetime, timezone
-from db import get_connection
+from .db import get_connection
 from ingestion.chunking import SemanticChunker
 from ingestion.pdf_ingestion import extract_text_with_page_map, find_page_for_chunk
 from ingestion.pdf_ingestion import extract_text_with_page_map,find_page_for_chunk
+
+
+def resource_exists(file_hash: str) -> bool:
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "SELECT 1 FROM resources WHERE hash = ?",
+        (file_hash,)
+    )
+
+    exists = cursor.fetchone() is not None
+
+    conn.close()
+
+    return exists
 
 
 def save_resource(
