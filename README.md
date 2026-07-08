@@ -1,219 +1,229 @@
 # 🧠 Local Personal Intelligence
 
-> **A privacy-first, agentic AI powered personal knowledge assistant for students.**
+> **A Privacy-First Multi-Agent Personal Knowledge Assistant for Students**
 
-Local Personal Intelligence is an Agentic Retrieval-Augmented Generation (RAG) system designed to help students efficiently search across multiple study resources. Instead of manually opening several PDFs to locate a specific concept, students can simply ask a question and receive an accurate answer along with the exact source document from which the information was retrieved.
+Local Personal Intelligence is a **local-first, Agentic Retrieval-Augmented Generation (RAG)** system that transforms scattered study materials into a searchable personal knowledge base.
 
-The entire system runs locally using open-source models, ensuring complete privacy while maintaining fast and efficient retrieval.
+Instead of manually searching through multiple PDFs, students can simply ask questions in natural language. The system retrieves the most relevant information from their personal documents, generates an evidence-grounded answer using a local language model, and cites the original source document.
+
+Unlike cloud-based AI assistants, **all processing happens locally**, ensuring complete privacy while providing intelligent semantic search and retrieval.
 
 ---
 
 # 📖 Overview
 
-Students often collect notes, lecture slides, textbooks, assignments, and documentation from multiple sources. As the number of study resources grows, finding a specific topic becomes increasingly time-consuming.
+Students often maintain hundreds of pages of lecture notes, assignments, documentation, textbooks, and reference PDFs. As this collection grows, finding a specific concept becomes increasingly time-consuming.
 
-Local Personal Intelligence solves this problem by automatically indexing personal study material into a semantic knowledge base.
+Local Personal Intelligence addresses this problem by automatically ingesting, indexing, and organizing PDF documents into a semantic knowledge base.
 
 The workflow is simple:
 
-* Upload one or more PDF documents.
-* The system automatically extracts and indexes their contents.
-* Ask questions in natural language.
-* The system retrieves the most relevant information using semantic search.
-* Answers are generated only from retrieved evidence.
-* The original source document is returned alongside the answer for easy verification.
+1. Upload one or more PDF documents.
+2. The system extracts and indexes their contents.
+3. Ask questions in natural language.
+4. Relevant documents are retrieved using semantic search.
+5. The system generates an answer grounded in the retrieved evidence.
+6. The original source documents are returned alongside the answer.
 
-Rather than replacing study material, the system helps students quickly navigate their own knowledge base.
+Rather than replacing study material, the project helps students efficiently navigate their own knowledge repository.
 
 ---
 
 # ✨ Features
 
-* 🔒 Completely local execution (no cloud APIs required)
-* 🤖 Agent-based workflow using LangGraph
-* 📄 Automatic PDF ingestion
-* 🧩 Semantic chunking using similarity-threshold chunking
-* 🧠 Two-stage semantic retrieval
-* 📚 SQLite metadata management
-* ⚡ ChromaDB vector storage
-* 📝 LLM-generated resource summaries
-* 📍 Source citation with document path
-* 🖼️ Vision-based OCR fallback for failed PDF pages
-* 🚫 Hallucination prevention through retrieval validation
-* 🌐 Multilingual capability via local Qwen model
-* 🔐 Privacy-first architecture
+## 📚 Knowledge Base
+
+* Automatic PDF ingestion
+* Semantic document chunking
+* Intelligent document summarization
+* Persistent knowledge storage
+
+## 🔍 Intelligent Retrieval
+
+* Two-stage semantic retrieval
+* Summary-based resource filtering
+* Chunk-level semantic search
+* Structured evidence generation
+* Reflection-aware reasoning
+* Source citation with document path
+
+## 🤖 Multi-Agent Architecture
+
+* Supervisor Agent
+* Memory Agent
+* Reasoning Agent
+* Vision Recovery Agent
+* Summarizer Agent
+
+## 🔒 Privacy First
+
+* Fully local execution
+* Local LLM (Qwen)
+* No cloud API dependency
+* No user data leaves the machine
 
 ---
 
-# ❓ Why This Project?
+# ❓ Problem Statement
 
-Traditional RAG systems usually retrieve similar chunks directly from an entire vector database.
+Students frequently spend more time locating information than actually learning it.
 
-As the number of documents increases, retrieval becomes slower and often less relevant.
+Searching across multiple lecture notes, books, documentation, and assignments is inefficient because:
 
-This project introduces a **hierarchical retrieval pipeline**.
+* Information is scattered.
+* Traditional keyword search lacks semantic understanding.
+* Similar concepts are expressed differently across resources.
+* Students often forget which document contains the required information.
 
-Instead of searching every chunk:
-
-1. Relevant documents are first identified using summary embeddings.
-2. Chunk-level retrieval is performed only within those shortlisted documents.
-3. The retrieved evidence is transformed into structured knowledge before being sent to the reasoning model.
-
-This significantly reduces unnecessary retrieval while improving answer relevance.
+This project converts personal study material into an intelligent semantic memory that understands concepts rather than exact keywords.
 
 ---
 
-# 🏗 Architecture
+# 🏗 System Architecture
 
-The system follows an Agentic AI architecture where each agent performs one specialized responsibility.
+The system follows a modular multi-agent architecture.
 
-```
-                User Input
-                     │
-          ┌──────────┴──────────┐
-          │                     │
-      PDF Upload            User Query
-          │                     │
-          ▼                     ▼
-     Supervisor Agent (Routing)
-          │                     │
-          │                     ▼
-          │              Query Processing
-          │                     │
-          ▼                     ▼
-     PDF Ingestion        Memory Agent
-          │                     │
-          ▼                     │
- Vision Recovery Agent          │
-          │                     │
-          ▼                     │
-   Store Resource Metadata      │
-          │                     │
-          ▼                     ▼
-   Knowledge Indexing      Evidence Builder
-          │                     │
-          ▼                     ▼
-   Summarizer Agent     Knowledge Structure
-          │                     │
-          ▼                     ▼
- Summary Embedding      Reflection Context
-          │                     │
-          └──────────────┬──────┘
-                         ▼
-                  Reasoning Agent
+```text
+                    User Input
                          │
-                         ▼
-               Answer + Source Citation
+              ┌──────────┴──────────┐
+              │                     │
+          PDF Path              User Query
+              │                     │
+              ▼                     ▼
+          Supervisor Agent (Routing)
+              │                     │
+              │                     ▼
+              │             Query Processing
+              │                     │
+              ▼                     ▼
+        PDF Ingestion          Memory Agent
+              │                     │
+              ▼                     ▼
+     Ingestion Recovery       Reasoning Agent
+              │                     │
+      ┌───────┴────────┐            │
+      │                │            │
+      ▼                ▼            │
+ Vision Recovery   Store Resource   │
+              │                │     │
+              └────────┬───────┘     │
+                       ▼             │
+               Knowledge Indexing    │
+                       │             │
+                       ▼             │
+                Summarizer Agent     │
+                       │             │
+                       ▼             │
+                Summary Saver        │
+                       │             │
+                       └─────────────┘
+                             │
+                             ▼
+                    Final Response
 ```
 
 ---
 
-# ⚙ Workflow
+# 📥 Ingestion Workflow
 
-## 1. Ingestion Pipeline
+When a PDF is provided, the Supervisor Agent routes the request to the ingestion workflow.
 
-When a PDF is provided:
+The ingestion pipeline performs:
 
-* Extract text using PyMuPDF.
-* Automatically clean extracted text.
-* Generate a unique Resource ID.
-* Store PDF metadata in SQLite.
-* Perform semantic chunking.
-* Generate embeddings using **all-MiniLM-L6-v2**.
-* Store chunk embeddings in ChromaDB.
-* Summarize the document using the local LLM.
-* Store summary embedding in a separate Chroma collection.
+1. PDF validation
+2. Resource ID generation
+3. Text extraction using PyMuPDF
+4. PDF metadata extraction
+5. SQLite resource storage
+6. Semantic chunk generation
+7. Embedding generation using **all-MiniLM-L6-v2**
+8. ChromaDB storage
+9. LLM-based document summarization
+10. Summary embedding generation
+11. Summary storage for retrieval
 
-This prepares the document for efficient future retrieval.
-
----
-
-## 2. Query Pipeline
-
-When the user asks a question:
-
-* Clean the user query.
-* Generate semantic embedding.
-* Search document summaries.
-* Select the most relevant resources.
-* Retrieve only relevant chunks.
-* Build structured evidence.
-* Generate knowledge relationships.
-* Build reflection context.
-* Pass structured memory to the reasoning model.
-* Generate an evidence-grounded response.
+After completion, the document becomes part of the student's personal knowledge base.
 
 ---
 
-# 🧠 Agent Responsibilities
+# 🔎 Query Workflow
 
-## Supervisor Agent
+When the user asks a question, the query pipeline performs:
 
-Routes incoming requests into either the ingestion workflow or the query workflow.
-
----
-
-## PDF Ingestion Node
-
-Extracts text, computes file hashes, generates metadata, and prepares resources for indexing.
-
----
-
-## Vision Recovery Agent
-
-If PDF parsing fails or pages contain insufficient text, the page is rendered as an image and processed using the local vision-capable LLM.
-
-This acts as an automatic OCR recovery mechanism.
+1. Query cleaning
+2. Query embedding generation
+3. Summary retrieval
+4. Resource filtering
+5. Chunk retrieval
+6. Evidence construction
+7. Knowledge context generation
+8. Reflection context generation
+9. Retrieval validation
+10. Reasoning using the local LLM
+11. Response generation with source citation
 
 ---
 
-## Knowledge Indexing Node
+# 🧠 Memory Agent
 
-Responsible for:
+The Memory Agent is the core retrieval orchestrator.
 
-* Semantic chunk generation
-* Embedding creation
-* ChromaDB storage
+Instead of directly passing retrieved chunks to the language model, it builds a structured **Memory Context**.
 
----
+The Memory Agent performs the following deterministic stages:
 
-## Summarizer Agent
+### Stage 1 — Resource Retrieval
 
-Creates concise semantic summaries describing the important topics contained in each document.
-
-These summaries improve retrieval quality during the first retrieval stage.
+Searches the summary embedding collection to identify the most relevant resources.
 
 ---
 
-## Memory Agent
+### Stage 2 — Chunk Retrieval
 
-The core retrieval orchestrator.
-
-It performs:
-
-* Resource retrieval
-* Chunk retrieval
-* Evidence construction
-* Knowledge graph construction
-* Reflection context generation
-
-before sending structured memory to the reasoning agent.
+Searches only the shortlisted resources instead of the entire vector database.
 
 ---
 
-## Reasoning Agent
+### Stage 3 — Evidence Builder
 
-Generates the final answer exclusively from retrieved evidence.
+Transforms retrieved chunks into structured Evidence Objects containing:
 
-The response always includes the relevant source documents for verification.
+* Resource name
+* Resource summary
+* Retrieved chunks
+* Retrieval score
 
 ---
 
-# 🔍 Two-Stage Retrieval Strategy
+### Stage 4 — Knowledge Context
 
-Instead of searching every chunk in the vector database:
+Builds structured knowledge information from the retrieved evidence.
 
-```
+---
+
+### Stage 5 — Reflection Context
+
+Generates a deterministic reflection context describing:
+
+* Learning state
+* Resource usage
+* Important concepts
+* Knowledge gaps
+* Learning patterns
+* Suggested next topics
+
+---
+
+The complete Memory Context is then passed to the Reasoning Agent.
+
+---
+
+# 🎯 Two-Stage Retrieval Strategy
+
+Rather than searching every chunk inside the vector database, retrieval occurs in two stages.
+
+```text
 User Query
       │
       ▼
@@ -223,191 +233,189 @@ Summary Embedding Search
 Relevant Resources
       │
       ▼
-Chunk Search (Only Inside Those Resources)
+Chunk Embedding Search
       │
       ▼
 Evidence Builder
+      │
+      ▼
+Reasoning
 ```
 
-This dramatically reduces search space and improves retrieval precision.
+### Why?
+
+Searching every chunk becomes increasingly expensive as more documents are added.
+
+By first retrieving relevant resources using summary embeddings, chunk retrieval is limited to only those documents.
+
+This reduces the search space while improving retrieval quality.
 
 ---
 
-# 🛡 Failure Recovery Mechanisms
+# 🤖 Reasoning Agent
 
-The system includes multiple recovery strategies to improve robustness.
+The Reasoning Agent is responsible for generating the final response.
 
-### Duplicate Detection
+It receives:
 
-Resources are identified using SHA-256 hashes, preventing duplicate ingestion.
+* User query
+* Evidence Object
+* Knowledge Context
+* Reflection Context
 
----
+Using this structured memory, the local language model produces an answer grounded entirely in retrieved evidence.
 
-### Vision OCR Recovery
-
-If PDF parsing fails or extracted text is insufficient, the failed pages are rendered as images and processed using the local vision-capable LLM.
-
----
-
-### Retrieval Validation
-
-The system avoids hallucinations by checking:
-
-* No chunks retrieved
-* Similarity score below threshold (0.40)
-
-In either case, the user receives a meaningful "No relevant information found" response instead of a fabricated answer.
+The response also includes the source document names and file paths, allowing students to verify and revisit the original material.
 
 ---
 
-### Transaction Safety
+# 🛡 Failure Handling
 
-If ingestion fails midway, partially indexed data can be safely rolled back to maintain database consistency.
+The current implementation includes two failure recovery mechanisms.
+
+## 1. Vision OCR Recovery
+
+Some PDF pages may fail during extraction or contain insufficient text.
+
+Instead of failing the ingestion process, the affected pages are rendered as images and processed by the local vision-capable language model.
+
+The recovered text is appended before indexing, ensuring that valuable content is not lost.
 
 ---
 
-# 🗄 Knowledge Storage
+## 2. Retrieval Validation
 
-The project combines relational storage with vector search.
+After chunk retrieval, the Memory Agent validates the results.
 
-### SQLite
+If:
+
+* no chunks are retrieved, or
+* the highest similarity score is below the configured threshold,
+
+the Reasoning Agent is skipped.
+
+Instead, the user receives a meaningful response indicating that no sufficiently relevant information was found.
+
+This prevents the language model from generating unsupported or hallucinated answers.
+
+---
+
+# 🗄 Data Storage
+
+The project combines relational storage with semantic vector search.
+
+## SQLite
 
 Stores:
 
 * Resource metadata
 * Chunk metadata
 * User interactions
-* Concepts
-* Relationships
+* Document summaries
 
----
-
-### ChromaDB
+## ChromaDB
 
 Stores:
 
 * Chunk embeddings
 * Summary embeddings
 
-This hybrid approach combines fast semantic search with structured metadata queries.
+This hybrid design combines efficient metadata storage with fast semantic retrieval.
 
 ---
 
 # 🛠 Tech Stack
 
-### AI
-
-* LangGraph
-* LangChain
-* Qwen 3.5 2B (Local LLM)
-* Sentence Transformers
-
-### Embedding Model
-
-* all-MiniLM-L6-v2
-
-### Vector Database
-
-* ChromaDB
-
-### Relational Database
-
-* SQLite
-
-### PDF Processing
-
-* PyMuPDF
-* pytesseract (fallback OCR)
-
-### Programming Language
-
-* Python
+| Category               | Technology                    |
+| ---------------------- | ----------------------------- |
+| Programming Language   | Python                        |
+| Workflow Orchestration | LangGraph                     |
+| LLM Framework          | LangChain                     |
+| Local Language Model   | Qwen (via Ollama)             |
+| Embedding Model        | all-MiniLM-L6-v2              |
+| Vector Database        | ChromaDB                      |
+| Metadata Database      | SQLite                        |
+| PDF Parsing            | PyMuPDF                       |
+| OCR Recovery           | Vision-capable Qwen           |
+| Semantic Chunking      | Similarity Threshold Chunking |
 
 ---
 
-# 📂 Project Workflow
+# 📂 Project Structure
 
-```
-PDF
- │
- ▼
-Extract
- │
- ▼
-Chunk
- │
- ▼
-Embed
- │
- ▼
-Store
- │
- ▼
-Summarize
- │
- ▼
-Store Summary
-
-==========================
-
-Query
- │
- ▼
-Embed
- │
- ▼
-Retrieve Summary
- │
- ▼
-Retrieve Chunks
- │
- ▼
-Evidence Builder
- │
- ▼
-Knowledge Structure
- │
- ▼
-Reflection Context
- │
- ▼
-Reasoning Agent
- │
- ▼
-Answer
+```text
+Local-Personal-Intelligence
+│
+├── agents/
+├── database/
+├── ingestion/
+├── retrieval/
+├── llm/
+├── chroma/
+├── app.py
+└── README.md
 ```
 
 ---
 
-# 🔒 Privacy
+# 💡 Design Decisions
 
-One of the primary goals of this project is complete user privacy.
+## Local LLM
 
-Unlike cloud-based assistants:
+Using a local language model ensures complete privacy, eliminates API costs, and allows offline operation.
 
-* Documents never leave the local machine.
-* No external API calls are required.
-* User knowledge is never used for model training.
-* All inference is performed locally.
+---
 
-This makes the system suitable for personal notes, academic material, and sensitive documents.
+## Semantic Chunking
+
+Instead of fixed-length chunking, semantic chunking preserves coherent concepts, leading to more meaningful retrieval.
+
+---
+
+## Summary Embeddings
+
+Generating document summaries enables efficient first-stage retrieval before searching individual chunks.
+
+---
+
+## Two-Stage Retrieval
+
+Searching summaries before chunk embeddings significantly reduces unnecessary vector search and improves scalability.
+
+---
+
+## Deterministic Memory Pipeline
+
+Evidence construction, knowledge organization, and reflection are computed deterministically before invoking the LLM.
+
+This minimizes hallucinations by ensuring the model reasons over structured evidence instead of raw retrieval results.
 
 ---
 
 # 🚀 Future Improvements
 
-* Streamlit Web Interface
+* Frontend inegration
 * Concept extraction pipeline
 * Relationship graph visualization
-* Multi-document comparative reasoning
-* Incremental indexing
+* Better sources retrival separation 
+* Support for additional document formats
 * Conversation memory
-* Audio note ingestion
-* Web article ingestion
 * Personal study analytics
+* voice support and multilanguage support
+
+---
+
+# 🔒 Privacy
+
+Privacy is a primary objective of this project.
+
+* All inference runs locally.
+* Documents never leave the user's device.
+* No external APIs are required.
+* Personal study material is never used for model training.
 
 ---
 
 # 👨‍💻 Author
 
-Developed as an **Agentic AI Capstone Project** demonstrating the integration of Retrieval-Augmented Generation, multi-agent orchestration, semantic search, local language models, and privacy-preserving AI systems.
+Developed as an **Agentic AI Capstone Project** demonstrating the practical application of multi-agent systems, Retrieval-Augmented Generation (RAG), semantic search, local language models, and privacy-preserving AI for academic knowledge management.
