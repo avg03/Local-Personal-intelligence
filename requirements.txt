@@ -1,0 +1,56 @@
+# ==============================
+# Core AI Framework
+# ==============================
+langchain
+langchain-core
+langchain-community
+langchain-ollama
+langgraph
+
+# ==============================
+# Local LLM
+# ==============================
+ollama
+
+# ==============================
+# Embeddings
+# ==============================
+sentence-transformers
+transformers
+torch
+
+# ==============================
+# Vector Database
+# ==============================
+chromadb
+
+# ==============================
+# PDF Processing
+# ==============================
+PyMuPDF
+pypdf
+
+# ==============================
+# OCR
+# ==============================
+pytesseract
+Pillow
+
+# ==============================
+# NLP
+# ==============================
+nltk
+numpy
+
+# ==============================
+# Environment Variables
+# ==============================
+python-dotenv
+
+
+
+
+# ==============================
+# Utilities
+# ==============================
+typing_extensions
