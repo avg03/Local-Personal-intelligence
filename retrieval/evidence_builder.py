@@ -23,12 +23,12 @@ def _fetch_resource_metadata(resource_ids: List[str]) -> Dict[str, Dict]:
     cursor = conn.cursor()
     placeholders = ",".join("?" for _ in resource_ids)
     cursor.execute(
-        f"SELECT resource_id, name, summary FROM resources WHERE resource_id IN ({placeholders})",
+        f"SELECT resource_id, name, summary, path FROM resources WHERE resource_id IN ({placeholders})",
         resource_ids,
     )
     rows = cursor.fetchall()
     conn.close()
-    return {row[0]: {"name": row[1], "summary": row[2]} for row in rows}
+    return {row[0]: {"name": row[1], "summary": row[2], "path": row[3]} for row in rows}
 
 
 def _fetch_concepts(resource_ids: List[str]) -> Dict[str, List[str]]:
@@ -118,17 +118,20 @@ def build_evidence(chunks: List[Dict], aggregation: str = "max") -> List[Dict]:
         retrieval_score = max(scores) if aggregation == "max" else sum(scores) / len(scores)
 
         evidence.append({
-            "resource_id": resource_id,
-            "resource_name": meta.get("name", "Unknown resource"),
-            "summary": meta.get("summary"),  # may be None if not summarized yet
-            "concepts": concepts_by_resource.get(resource_id, []),  # empty until concept extraction is built
-            "retrieved_chunks": [
-                {"page": page_by_chunk.get(c["chunk_id"]), "text": c["text"]}
-                for c in resource_chunks
-            ],
-            "retrieval_score": round(retrieval_score, 4),
-        })
-
+    "resource_id": resource_id,
+    "resource_name": meta.get("name", "Unknown resource"),
+    "resource_path": meta.get("path"),      # <-- Missing
+    "summary": meta.get("summary"),
+    "concepts": concepts_by_resource.get(resource_id, []),
+    "retrieved_chunks": [
+        {
+            "page": page_by_chunk.get(c["chunk_id"]),
+            "text": c["text"],
+        }
+        for c in resource_chunks
+    ],
+    "retrieval_score": round(retrieval_score, 4),
+})
     evidence.sort(key=lambda e: e["retrieval_score"], reverse=True)
     return evidence
 
