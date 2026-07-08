@@ -6,7 +6,10 @@ Similarity-threshold semantic chunking (Greg Kamradt's approach), refined:
 - percentile-based adaptive threshold, with fixed-threshold fallback
 """
 
+import os
 from typing import List, Dict, Optional, Tuple
+from dotenv import load_dotenv
+from dotenv import load_dotenv
 import numpy as np
 import nltk
 from sentence_transformers import SentenceTransformer
@@ -45,7 +48,8 @@ class SemanticChunker:
         min_chunk_size: int = 100,
         max_chunk_size: int = 1000,
     ):
-        self.encoder = SentenceTransformer(embedding_model)
+        load_dotenv()
+        self.encoder = SentenceTransformer(embedding_model, token=os.getenv("HUGGING_FACE_TOKEN"))
         self.similarity_threshold = similarity_threshold
         self.use_percentile_threshold = use_percentile_threshold
         self.percentile = percentile
