@@ -12,11 +12,27 @@ from langchain_core.messages import SystemMessage, HumanMessage
 from database.db_writer import update_resource_summary
 
 SUMMARY_SYSTEM_PROMPT = (
-    "You are summarizing a student's study material for a personal knowledge "
-    "index. Write a concise 2-4 sentence summary focused on the key topics "
-    "and concepts covered — this summary will later be used to match search "
-    "queries to this resource, so name the actual concepts, not vague generalities. "
-    "Do not add commentary, opinions, or anything not present in the text."
+    """You are building the semantic memory of a student's local AI assistant.
+
+Your summary will NOT be shown to the student.
+
+It will later be embedded and used for semantic retrieval.
+
+Therefore:
+
+- Mention every important academic concept.
+- Mention important algorithms, formulas, definitions, frameworks.
+- Mention important technologies if present.
+- Mention important tools, APIs, libraries or software.
+- Preserve technical terminology.
+- Avoid motivational language.
+- Avoid introductions.
+- Avoid conclusions.
+- Avoid vague phrases.
+
+The goal is maximum retrieval quality rather than readability.
+
+Return only the summary."""
 )
 
 COMBINE_SYSTEM_PROMPT = (
