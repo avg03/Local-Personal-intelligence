@@ -1,5 +1,15 @@
 # 🧠 Local Personal Intelligence
 
+![License](https://img.shields.io/badge/License-MIT-blue)
+![Python](https://img.shields.io/badge/Python-3.10+-3776AB?logo=python&logoColor=white)
+![Agentic AI](https://img.shields.io/badge/Architecture-Multi--Agent-blueviolet)
+![LangGraph](https://img.shields.io/badge/LangGraph-Agent%20Workflow-6C47FF)
+![LangChain](https://img.shields.io/badge/LangChain-Framework-1C3C3C?logo=langchain&logoColor=white)
+![RAG](https://img.shields.io/badge/RAG-Hierarchical-orange)
+![Local LLM](https://img.shields.io/badge/LLM-Qwen_Local-green)
+![SQLite](https://img.shields.io/badge/SQLite-Database-003B57?logo=sqlite&logoColor=white)
+![ChromaDB](https://img.shields.io/badge/ChromaDB-Vector%20DB-purple)
+
 > **A Privacy-First Multi-Agent Personal Knowledge Assistant for Students**
 
 Local Personal Intelligence is a **local-first, Agentic Retrieval-Augmented Generation (RAG)** system that transforms scattered study materials into a searchable personal knowledge base.
