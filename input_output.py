@@ -1,4 +1,4 @@
-from agents.agents import graph
+from agents.graph_pipeline import graph
 
 
 def ingest_pdf():

@@ -38,18 +38,22 @@ class SemanticChunker:
     """
 
     def __init__(
-        self,
-        embedding_model: str = "all-MiniLM-L6-v2",
-        similarity_threshold: float = 0.5,     # used only if use_percentile_threshold=False
-        use_percentile_threshold: bool = True, # Kamradt's actual method: adaptive per-document
-        percentile: float = 95.0,              # higher = fewer, bigger chunks
-        sentences_per_group: int = 3,
-        overlap_sentences: int = 1,
-        min_chunk_size: int = 100,
-        max_chunk_size: int = 1000,
-    ):
-        load_dotenv()
-        self.encoder = SentenceTransformer(embedding_model, token=os.getenv("HUGGING_FACE_TOKEN"))
+    self,
+    embedding_model: str = "all-MiniLM-L6-v2",
+    encoder: Optional[SentenceTransformer] = None,   # ADD THIS — reuse shared instance if given
+    similarity_threshold: float = 0.5,
+    use_percentile_threshold: bool = True,
+    percentile: float = 95.0,
+    sentences_per_group: int = 3,
+    overlap_sentences: int = 1,
+    min_chunk_size: int = 100,
+    max_chunk_size: int = 1000,
+):
+        if encoder is not None:
+         self.encoder = encoder
+        else:
+            load_dotenv()
+            self.encoder = SentenceTransformer(embedding_model, token=os.getenv("HUGGING_FACE_TOKEN"))
         self.similarity_threshold = similarity_threshold
         self.use_percentile_threshold = use_percentile_threshold
         self.percentile = percentile
