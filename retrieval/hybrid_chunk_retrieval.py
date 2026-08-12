@@ -6,7 +6,7 @@ lexical (fts_search.py) results via RRF. Output feeds the reranker next.
 """
 
 from typing import List, Dict
-from chunk_search import search_chunks_by_resource_ids
+from retrieval.chunk_search import search_chunks_by_resource_ids
 from database.fts_search import search_chunks_fts
 from ingestion.rrf_fusion import reciprocal_rank_fusion
 

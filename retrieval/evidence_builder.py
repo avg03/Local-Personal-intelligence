@@ -69,7 +69,7 @@ def build_evidence(chunks: List[Dict], aggregation: str = "max") -> List[Dict]:
     evidence = []
     for resource_id, resource_chunks in grouped_chunks.items():
         meta = resource_meta.get(resource_id, {})
-        scores = [c["score"] for c in resource_chunks]
+        scores = [c.get("rerank_score", c["score"]) for c in resource_chunks]
         retrieval_score = max(scores) if aggregation == "max" else sum(scores) / len(scores)
 
         evidence.append({

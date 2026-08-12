@@ -8,7 +8,7 @@ lexical (FTS5 over name/summary) via RRF.
 from typing import List
 from retrieval.resource_search import search_resources_by_summary
 from database.fts_search import search_resources_fts
-from rrf_fusion import reciprocal_rank_fusion
+from ingestion.rrf_fusion import reciprocal_rank_fusion
 
 
 def resolve_resources(

@@ -1,6 +1,6 @@
 from typing import List, Dict, Optional
 from datetime import datetime, timezone
-from db import get_connection
+from database.db import get_connection
 
 
 def resource_exists(file_hash: str) -> bool:

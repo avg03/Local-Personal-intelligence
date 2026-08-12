@@ -7,7 +7,7 @@ step 2).
 """
 
 from typing import List, Dict, Optional
-from db import get_connection
+from database.db import get_connection
 
 
 def _build_fts_query(cleaned_query: str) -> str:
@@ -83,6 +83,44 @@ def search_chunks_fts(
     return [
         {"chunk_id": chunk_id, "resource_id": resource_id, "text": text, "score": -rank}
         for chunk_id, resource_id, text, rank in rows
+    ]
+
+
+def search_resources_fts(
+    cleaned_query: str,
+    top_k: int = 10,
+) -> List[Dict]:
+    """
+    Search resources_fts for lexical matches over name + summary.
+
+    Returns:
+        [{"resource_id": ..., "name": ..., "summary": ..., "score": ...}]
+    """
+    if not cleaned_query:
+        return []
+
+    fts_query = _build_fts_query(cleaned_query)
+    if not fts_query:
+        return []
+
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute(
+        """
+        SELECT resource_id, name, summary, bm25(resources_fts) as rank
+        FROM resources_fts
+        WHERE resources_fts MATCH ?
+        ORDER BY rank
+        LIMIT ?
+        """,
+        (fts_query, top_k),
+    )
+    rows = cursor.fetchall()
+    conn.close()
+
+    return [
+        {"resource_id": resource_id, "name": name, "summary": summary, "score": -rank}
+        for resource_id, name, summary, rank in rows
     ]
 
 

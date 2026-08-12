@@ -11,7 +11,7 @@ def ingest_pdf():
         "logs": [],
         "response": {},
 
-        "similarity_threshold": 0.40,
+        "relevance_threshold": 0.40,
     }
 
     result = graph.invoke(state)
@@ -32,7 +32,7 @@ def ask_query():
         "logs": [],
         "response": {},
 
-        "similarity_threshold": 0.40,
+        "relevance_threshold": 0.40,
     }
 
     result = graph.invoke(state)

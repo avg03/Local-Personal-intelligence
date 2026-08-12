@@ -28,3 +28,30 @@ END;
 CREATE TRIGGER IF NOT EXISTS chunks_ad AFTER DELETE ON chunks BEGIN
     DELETE FROM chunks_fts WHERE chunk_id = old.chunk_id;
 END;
+
+-- Full-text search over resources.name + resources.summary for hybrid
+-- resource resolution (semantic Chroma + lexical FTS via RRF).
+CREATE VIRTUAL TABLE IF NOT EXISTS resources_fts USING fts5(
+    resource_id UNINDEXED,
+    name,
+    summary
+);
+
+DELETE FROM resources_fts;
+INSERT INTO resources_fts (resource_id, name, summary)
+SELECT resource_id, name, COALESCE(summary, '') FROM resources;
+
+CREATE TRIGGER IF NOT EXISTS resources_ai AFTER INSERT ON resources BEGIN
+    INSERT INTO resources_fts (resource_id, name, summary)
+    VALUES (new.resource_id, new.name, COALESCE(new.summary, ''));
+END;
+
+CREATE TRIGGER IF NOT EXISTS resources_au AFTER UPDATE ON resources BEGIN
+    DELETE FROM resources_fts WHERE resource_id = old.resource_id;
+    INSERT INTO resources_fts (resource_id, name, summary)
+    VALUES (new.resource_id, new.name, COALESCE(new.summary, ''));
+END;
+
+CREATE TRIGGER IF NOT EXISTS resources_ad AFTER DELETE ON resources BEGIN
+    DELETE FROM resources_fts WHERE resource_id = old.resource_id;
+END;
